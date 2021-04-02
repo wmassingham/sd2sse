@@ -1,14 +1,25 @@
 param (
-    [Parameter(Mandatory = $true)][string]$infile
+	[Parameter(Mandatory = $true)][string]$infile
 )
 
+$env:path = "C:\Program Files\ImageMagick-7.0.11-Q16-HDRI\;$env:path"
+$env:MAGICK_OCL_DEVICE = "OFF" # required due to a bug in 7.0, ok to remove this line starting with 7.0.11-6
 
-$outfile = $infile#.replace('.png', '.dds')
-$outfile = $infile.replace('_diffuse','')
+$outfile = $infile.replace('_diffuse.png', '.dds').replace('_normal.png', '_n.dds')
 
-write-output "converting $infile"
-write-output "to $outfile"
+Write-Output "converting $infile"
+Write-Output "to $outfile"
 
-new-alias magick "C:\Program Files\ImageMagick-7.0.11-Q16-HDRI\magick.exe"
-magick convert $infile -gravity northeast -crop 2048x4096+1024+0 +repage $outfile
-magick convert $outfile -format dds -define dds:compression=dxt5 $outfile.replace('.png','.dds')
+magick convert $infile `
+	-gravity northeast -background transparent `
+	-crop 2048x4096+1024+0! +repage `
+	-resize 1744x4096+304+0! +repage `
+	-extent 2048x4096+0+0! +repage `
+	-format dds -define dds:compression=dxt5 "$outfile"
+
+# if it's a normal map, halve the resolution
+if ($infile -like '*_normal.png') {
+	magick mogrify -resize 50% $outfile
+}
+
+Remove-Item $infile
