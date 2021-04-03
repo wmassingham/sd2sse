@@ -1,7 +1,7 @@
 #!/bin/bash
 
 infile=$(echo "$1" | sed -e 's|C:|/mnt/c|' -e 's|\\|/|g')
-outfile=$(echo "$infile" | sed -e 's/_diffuse.png$/.dds/' -e 's/_normal.png/_n.dds/')
+outfile=$(echo "$infile" | sed -e 's/_diffuse//' -e 's/_normal/_n/' -e 's/.png$/.dds/')
 
 echo "converting $infile"
 echo "to $outfile"

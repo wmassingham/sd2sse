@@ -5,7 +5,7 @@ param (
 $env:path = "C:\Program Files\ImageMagick-7.0.11-Q16-HDRI\;$env:path"
 $env:MAGICK_OCL_DEVICE = "OFF" # required due to a bug in 7.0, ok to remove this line starting with 7.0.11-6
 
-$outfile = $infile.replace('_diffuse.png', '.dds').replace('_normal.png', '_n.dds')
+$outfile = $infile.replace('_diffuse', '').replace('_normal', '_n').replace('.png', '.dds')
 
 Write-Output "converting $infile"
 Write-Output "to $outfile"
