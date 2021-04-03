@@ -1,4 +1,9 @@
-echo bat %1
+@echo off
 
-powershell .\banner.ps1 -infile %1
-@REM bash banner.sh "%1"
+for %%x in (%*) do (
+	echo bat %%x
+	powershell .\banner.ps1 -infile %%x
+	@REM bash banner.sh "%%x"
+)
+
+@REM pause
